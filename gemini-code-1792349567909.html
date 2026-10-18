@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="parchment">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ece3d0" id="metaThemeColor">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Focus Flow">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="author" content="Giridharan">
+<meta name="description" content="Focus Flow — a classic Pomodoro timer, task ledger and habit tracker, created by Giridharan.">
+<title>Focus Flow — Pomodoro Regimen by Giridharan</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b241a'/%3E%3Ccircle cx='32' cy='32' r='25' fill='none' stroke='%23c9a35c' stroke-width='2'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-size='28' fill='%23e2c489'%3E%E2%9D%A6%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+    1. TOKENS  —  two classic themes
+    ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+--paper:#ece3d0;
+--paper-2:#f7f2e5;
+--card:#fdfaf2;
+--ink:#2b2620;
+--muted:#8c8070;
+--rule:#d5c7a9;
+--rule-2:#e8ddc5;
+--gold:#a8823f;
+--gold-2:#c9a860;
+--focus:#8c2f39;
+--short:#3f6b4d;
+--long:#2f4a6b;
+--tab:#8c2f39;
+--btn-a:#9c3a44;
+--btn-b:#7d2830;
+--btn-line:#6d1f27;
+--btn-txt:#fdf6e7;
+--wash:rgba(255,255,255,.45);
+--nav-a:#3b3226;
+--nav-b:#241f18;
+--nav-line:#514532;
+--nav-ico:#d9b878;
+--nav-txt:#b6a88d;
+--shadow:0 26px 50px -34px rgba(74,58,32,.6), 0 1px 0 rgba(255,255,255,.65) inset;
+--serif:"EB Garamond",Georgia,"Times New Roman",serif;
+--display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+}
+html[data-theme="nocturne"]{
+--paper:#131009;
+--paper-2:#1a1610;
+--card:#211c15;
+--ink:#efe6d4;
+--muted:#a2937a;
+--rule:#3d3325;
+--rule-2:#2f271c;
+--gold:#c9a35c;
+--gold-2:#e2c489;
+--focus:#c96a63;
+--short:#79b48d;
+--long:#8aa8d4;
+--tab:#e2c489;
+--btn-a:#d9b878;
+--btn-b:#b8934b;
+--btn-line:#8f7233;
+--btn-txt:#1c1710;
+--wash:rgba(255,255,255,.03);
+--nav-a:#2b241a;
+--nav-b:#181410;
+--nav-line:#463a29;
+--nav-ico:#e2c489;
+--nav-txt:#a89a7e;
+--shadow:0 28px 55px -34px #000, 0 1px 0 rgba(255,255,255,.04) inset;
+}
+
+/* ============================================================
+2. PAGE SHELL
+============================================================ */
+html,body{min-height:100%}
+body{
+font-family:var(--serif);
+color:var(--ink);
+background:
+radial-gradient(1200px 700px at 8% -18%, rgba(168,130,63,.16), transparent 62%),
+radial-gradient(900px 620px at 102% 2%, rgba(47,74,107,.11), transparent 58%),
+linear-gradient(180deg, var(--paper-2), var(--paper));
+padding:24px 18px 128px;
+-webkit-font-smoothing:antialiased;
+}
+body::before{
+content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+opacity:.45;mix-blend-mode:multiply;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+}
+html[data-theme="nocturne"] body::before{opacity:.16;mix-blend-mode:screen}
+
+.page{position:relative;z-index:1;width:min(880px,100%);margin:0 auto}
+
+/* ============================================================
+3. MASTHEAD
+============================================================ */
+.masthead{
+display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
+padding:0 2px 15px;border-bottom:1px solid var(--rule);margin-bottom:22px;
+}
+.brand{font-family:var(--display);font-size:32px;font-weight:600;letter-spacing:.5px;line-height:1;display:flex;align-items:center;gap:11px}
+.brand .mark{color:var(--gold);font-size:25px}
+.stamp{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:9px;padding-left:36px}
+.head-actions{display:flex;gap:8px;align-items:center}
+
+/* ============================================================
+4. BUTTONS
+============================================================ */
+.btn{
+font-family:var(--serif);font-size:11.5px;letter-spacing:1.8px;text-transform:uppercase;font-weight:600;
+border:1px solid var(--rule);background:transparent;color:var(--ink);
+padding:10px 17px;border-radius:3px;cursor:pointer;transition:.16s;white-space:nowrap;
+display:inline-flex;align-items:center;justify-content:center;gap:6px;user-select:none;
+}
+.btn:hover{background:rgba(168,130,63,.12);border-color:var(--gold)}
+.btn:active,.add-btn:active,.chip:active,.cell:active,.nav-btn:active{transform:scale(.96)}
+.btn.primary{
+background:linear-gradient(180deg,var(--btn-a),var(--btn-b));color:var(--btn-txt);border-color:var(--btn-line);
+box-shadow:0 1px 0 rgba(255,255,255,.2) inset, 0 12px 24px -16px rgba(120,30,40,.95);
+padding:12px 32px;font-size:12.5px;min-width:124px;
+}
+.btn.primary:hover{filter:brightness(1.07);background:linear-gradient(180deg,var(--btn-a),var(--btn-b))}
+.btn.icon{padding:10px 14px;font-size:15px;letter-spacing:0;min-width:44px;min-height:42px}
+
+/* ============================================================
+5. VIEWS (tabbed pages)
+============================================================ */
+.view{display:none;width:100%}
+.view.active{display:block;animation:fade .32s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.stack{display:flex;flex-direction:column;gap:20px;width:100%}
+
+.view-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;width:100%}
+.view-head h2{font-family:var(--display);font-size:29px;font-weight:600;letter-spacing:.6px;line-height:1.05}
+.view-head .sub{font-size:12px;font-style:italic;color:var(--muted);margin-top:7px}
+.view-head .orn{flex:1;display:flex;align-items:center;gap:12px;color:var(--gold);font-size:15px;min-width:16px}
+.view-head .orn::before{content:"";flex:1;height:1px;background:var(--rule)}
+
+/* ============================================================
+6. CARDS
+============================================================ */
+.card{
+position:relative;width:100%;background:var(--card);border:1px solid var(--rule);
+border-radius:4px;padding:26px;box-shadow:var(--shadow);
+}
+.card::after{content:"";position:absolute;inset:5px;border:1px solid var(--rule-2);border-radius:2px;pointer-events:none}
+.card > *{position:relative;z-index:1}
+.card.tight{padding:22px}
+
+.section-title{
+font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--muted);font-weight:600;
+display:flex;align-items:center;gap:12px;margin-bottom:14px;
+}
+.section-title::after{content:"";flex:1;height:1px;background:var(--rule)}
+
+/* ============================================================
+7. FORM PIECES
+============================================================ */
+.form-row{display:flex;gap:8px;margin-bottom:14px}
+.form-row.wrap{flex-wrap:wrap;align-items:center}
+.inp{
+background:transparent;border:1px solid var(--rule);border-radius:3px;padding:11px 13px;
+font-size:15px;font-family:var(--serif);color:var(--ink);outline:none;transition:.18s;width:100%;min-width:0;
+}
+.inp::placeholder{color:var(--muted);font-style:italic;opacity:.75}
+.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(168,130,63,.16)}
+.inp.time{width:auto;min-width:132px;flex:none;font-variant-numeric:tabular-nums}
+.add-btn{
+width:46px;flex:none;border:1px solid var(--rule);border-radius:3px;cursor:pointer;color:var(--ink);
+font-size:20px;background:linear-gradient(180deg,rgba(168,130,63,.16),transparent);transition:.18s;font-family:var(--serif);
+}
+.add-btn:hover{border-color:var(--gold);background:rgba(168,130,63,.22)}
+.add-btn.wide{
+width:auto;height:30px;padding:0 18px;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;font-weight:600;
+display:inline-flex;align-items:center;justify-content:center;
+}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{
+width:34px;height:30px;border:1px solid var(--rule);border-radius:3px;background:transparent;
+color:var(--muted);font-family:var(--serif);font-size:11px;letter-spacing:.5px;cursor:pointer;transition:.16s;padding:0;
+}
+.chip:hover{border-color:var(--gold);color:var(--ink)}
+.chip.on{background:linear-gradient(180deg,var(--gold-2),var(--gold));border-color:var(--gold);color:#3a2f18;font-weight:600}
+html[data-theme="nocturne"] .chip.on{color:#1c1710}
+
+/* ============================================================
+8. TIMER
+============================================================ */
+.tabs{display:flex;gap:26px;justify-content:center;border-bottom:1px solid var(--rule);margin-bottom:18px}
+.tab{
+background:none;border:none;font-family:var(--serif);font-size:11px;letter-spacing:2.6px;text-transform:uppercase;
+color:var(--muted);padding:0 2px 11px;cursor:pointer;position:relative;font-weight:600;transition:.2s;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--tab)}
+.tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gold)}
+
+.dial-wrap{display:grid;place-items:center;padding:8px 0 0}
+.dial{position:relative;width:296px;height:296px;display:grid;place-items:center;margin:0 auto}
+.dial svg{position:absolute;inset:0;width:100%;height:100%;color:var(--rule)}
+.rules{fill:none;stroke:currentColor}
+.ring-fg{fill:none;stroke:var(--focus);stroke-width:7;stroke-linecap:round;
+transition:stroke-dashoffset .45s linear, stroke .35s}
+.dial-inner{position:relative;z-index:1;text-align:center}
+.time{font-family:var(--display);font-size:58px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:1px;line-height:1}
+.label{font-size:11px;letter-spacing:4.5px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:8px}
+.cycle-dots{display:flex;gap:7px;justify-content:center;margin-top:12px}
+.dot{width:7px;height:7px;border-radius:50%;border:1px solid var(--rule);background:transparent;transition:.25s}
+.dot.done{background:var(--gold);border-color:var(--gold);box-shadow:0 0 9px rgba(168,130,63,.65)}
+
+.rest-note{
+display:none;text-align:center;font-size:13px;font-style:italic;color:var(--muted);
+border-top:1px dotted var(--rule);border-bottom:1px dotted var(--rule);padding:9px 8px;margin:14px 0 0;
+}
+.rest-note.show{display:block}
+.controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:22px}
+
+/* ============================================================
+9. STAT TILES
+============================================================ */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tiles.three{grid-template-columns:repeat(3,1fr)}
+.tile{
+text-align:center;padding:16px 6px;border:1px solid var(--rule-2);border-radius:3px;
+background:linear-gradient(180deg,var(--wash),transparent);
+}
+.tile b{display:block;font-family:var(--display);font-size:32px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.05}
+.tile span{font-size:9.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-top:4px}
+
+/* ============================================================
+10. TASKS
+============================================================ */
+ul.tasks{list-style:none;display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow-y:auto;padding-right:3px}
+ul.tasks::-webkit-scrollbar,ul.habits::-webkit-scrollbar{width:6px}
+ul.tasks::-webkit-scrollbar-thumb,ul.habits::-webkit-scrollbar-thumb{background:var(--rule);border-radius:99px}
+.task{
+display:flex;align-items:center;gap:11px;padding:11px 12px;border:1px solid var(--rule-2);
+border-radius:3px;background:var(--wash);transition:.18s;animation:slide .25s ease;
+}
+@keyframes slide{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.task:hover{border-color:var(--rule)}
+.task.active-task{border-color:var(--gold);background:rgba(168,130,63,.11);box-shadow:0 0 0 1px rgba(168,130,63,.22)}
+.check{
+width:18px;height:18px;border:1px solid var(--rule);border-radius:2px;flex:none;cursor:pointer;
+display:grid;place-items:center;background:transparent;transition:.16s;padding:0;
+}
+.check:hover{border-color:var(--gold)}
+.check.on{background:var(--short);border-color:var(--short)}
+.check svg{opacity:0;transition:.16s}
+.check.on svg{opacity:1}
+.task-txt{flex:1;font-size:15px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task-txt.done{text-decoration:line-through;color:var(--muted)}
+.pom-count{font-size:11px;letter-spacing:1px;color:var(--muted);border:1px solid var(--rule-2);border-radius:99px;padding:2px 9px;flex:none}
+.del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;line-height:1;padding:2px 5px;border-radius:2px;transition:.16s;font-family:var(--serif);flex:none;opacity:.6}
+.del:hover{color:var(--focus);opacity:1}
+.mini{
+background:none;border:1px solid transparent;color:var(--muted);cursor:pointer;font-size:13px;
+line-height:1;padding:3px 6px;border-radius:2px;transition:.16s;font-family:var(--serif);flex:none;opacity:.7;
+}
+.mini:hover{color:var(--gold);border-color:var(--rule);opacity:1}
+.empty{color:var(--muted);font-size:14px;font-style:italic;text-align:center;padding:26px 8px;list-style:none}
+
+/* ============================================================
+11. HABITS
+============================================================ */
+.habit-summary{font-size:12.5px;font-style:italic;color:var(--muted);margin:-4px 0 15px}
+.habit-hint{font-size:11.5px;font-style:italic;color:var(--muted);margin-top:11px}
+ul.habits{list-style:none;display:flex;flex-direction:column;gap:13px}
+li.habit{border:1px solid var(--rule-2);border-radius:3px;background:var(--wash);padding:13px;animation:slide .25s ease}
+.habit-head{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.habit-name{flex:1;font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.habit-streak{
+font-size:11px;letter-spacing:1.2px;color:var(--muted);border:1px solid var(--rule-2);
+border-radius:99px;padding:2px 9px;flex:none;white-space:nowrap;
+}
+.habit-streak.hot{color:var(--gold);border-color:rgba(168,130,63,.55);background:rgba(168,130,63,.08)}
+.habit-meta{font-size:11.5px;letter-spacing:.6px;color:var(--muted);margin-bottom:10px;font-style:italic}
+.habit-meta em{font-style:normal;color:var(--gold)}
+
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day-col{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.dlabel{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.cell{
+position:relative;width:100%;aspect-ratio:1/1;border:1px solid var(--rule);border-radius:3px;
+background:transparent;cursor:pointer;padding:0;transition:.16s;
+}
+.cell::after{
+content:"❦";position:absolute;inset:0;display:grid;place-items:center;
+font-size:12px;color:#3a2f18;opacity:0;transition:.15s;
+}
+html[data-theme="nocturne"] .cell::after{color:#1c1710}
+.cell:hover:not(:disabled){border-color:var(--gold);background:rgba(168,130,63,.13)}
+.cell.on{background:linear-gradient(180deg,var(--gold-2),var(--gold));border-color:var(--gold)}
+.cell.on::after{opacity:1}
+.cell:disabled{opacity:.24;cursor:default}
+.cell.unsched{border-style:dashed;opacity:.16}
+.cell.today{box-shadow:0 0 0 2px rgba(168,130,63,.3)}
+
+.habit-foot{display:flex;align-items:center;gap:10px;margin-top:11px}
+.habit-foot span{font-size:10.5px;letter-spacing:1.2px;color:var(--muted);white-space:nowrap;text-transform:uppercase}
+.bar{flex:1;height:4px;border-radius:99px;background:var(--rule-2);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold-2),var(--gold));transition:width .4s}
+
+/* habit editor */
+.edit-grid{display:grid;grid-template-columns:56px 1fr;gap:9px 12px;align-items:center;margin-top:12px;padding-top:12px;border-top:1px dotted var(--rule)}
+.edit-label{font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.edit-grid .chips{grid-column:2}
+.edit-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:14px;padding-top:12px;border-top:1px dotted var(--rule)}
+.btn.sm{padding:8px 15px;font-size:10.5px}
+
+/* ============================================================
+12. CHART
+============================================================ */
+.chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;height:172px;margin-top:4px}
+.chart .col{display:flex;flex-direction:column;align-items:center;height:100%;min-width:0}
+.chart .val{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums;height:16px}
+.chart .track{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.chart .bar{
+width:84%;min-height:4px;border-radius:2px 2px 0 0;
+background:linear-gradient(180deg,var(--gold-2),var(--gold));transition:height .55s cubic-bezier(.3,1,.4,1);
+}
+.chart .bar.zero{background:var(--rule-2);border-radius:2px}
+.chart .d-label{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-top:8px;font-weight:600}
+.chart-foot{font-size:12.5px;font-style:italic;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px dotted var(--rule)}
+
+/* ============================================================
+13. OVERVIEW ROWS + REGIMEN
+============================================================ */
+.ov-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dotted var(--rule)}
+.ov-row:last-child{border-bottom:none}
+.ov-name{flex:0 0 38%;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ov-num{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;flex:none;width:44px;text-align:right}
+
+.reg-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px dotted var(--rule)}
+.reg-row:last-child{border-bottom:none}
+.reg-row.today{border-left:2px solid var(--gold);background:rgba(168,130,63,.08)}
+.reg-row.off .reg-day,.reg-row.off .reg-val{opacity:.45}
+.reg-day{font-size:14px;letter-spacing:1.2px}
+.reg-val{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.reg-row.today .reg-val{color:var(--gold)}
+
+/* ============================================================
+14. TODAY LOG
+============================================================ */
+.today-log{display:flex;flex-wrap:wrap;gap:9px;min-height:30px;align-items:center}
+.pip{
+width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:13px;
+color:#f8ecd4;background:radial-gradient(circle at 34% 28%, #a83b46, #6d1f27);
+border:1px solid rgba(109,31,39,.6);box-shadow:0 4px 10px -5px rgba(80,20,25,.95);
+animation:pop .35s ease;
+}
+@keyframes pop{from{transform:scale(.35);opacity:0}to{transform:scale(1);opacity:1}}
+.log-empty{color:var(--muted);font-size:14px;font-style:italic}
+
+/* ============================================================
+15. COLOPHON
+============================================================ */
+.colophon{
+margin-top:30px;padding-top:18px;border-top:1px solid var(--rule);
+text-align:center;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);
+}
+.colophon strong{color:var(--ink);font-weight:600;letter-spacing:3.4px}
+.colophon .mark{color:var(--gold);margin:0 10px;font-size:13px}
+.colophon small{display:block;margin-top:9px;font-size:10px;letter-spacing:2.2px;font-style:italic;text-transform:none;color:var(--muted);opacity:.85}
+
+/* ============================================================
+16. BOTTOM NAVIGATION
+============================================================ */
+.tabbar{
+position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:70;
+width:min(560px,100%);
+display:grid;grid-template-columns:repeat(4,1fr);
+background:linear-gradient(180deg,var(--nav-a),var(--nav-b));
+border:1px solid var(--nav-line);border-bottom:none;
+border-radius:16px 16px 0 0;
+box-shadow:0 -16px 44px -18px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.08) inset;
+padding:8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+}
+.nav-btn{
+background:none;border:none;color:var(--nav-txt);font-family:var(--serif);
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+padding:6px 4px 10px;border-radius:10px;cursor:pointer;transition:.18s;position:relative;
+}
+.nav-btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6;transition:.18s}
+.nav-btn span{font-size:9.5px;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.nav-btn:hover{color:var(--nav-ico)}
+.nav-btn.active{color:var(--nav-ico)}
+.nav-btn.active::after{
+content:"";position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--nav-ico);
+}
+
+/* ============================================================
+17. INTERACTIVE NOTIFICATION CONTROLLER & TOAST
+============================================================ */
+.live-notif{
+position:fixed;left:50%;bottom:74px;transform:translate(-50%, 16px);z-index:88;
+width:min(520px, 94vw);
+background:linear-gradient(180deg, var(--nav-a), var(--nav-b));
+color:#efe6d4;border:1px solid var(--nav-line);border-radius:8px;
+padding:10px 14px;box-shadow:0 18px 42px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.08) inset;
+display:flex;align-items:center;justify-content:space-between;gap:10px;
+opacity:0;pointer-events:none;transition:opacity .26s ease, transform .26s ease;
+}
+.live-notif.show{opacity:1;pointer-events:auto;transform:translate(-50%, 0)}
+.live-notif-info{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.live-notif-badge{
+width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none;
+background:rgba(217,184,120,.14);border:1px solid rgba(217,184,120,.4);color:var(--nav-ico);font-size:14px;
+}
+.live-notif-text{min-width:0;flex:1}
+.live-notif-title{
+font-family:var(--display);font-size:18px;font-weight:600;letter-spacing:.6px;line-height:1.1;
+color:#fdf6e7;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px;
+}
+.live-notif-title small{
+font-family:var(--serif);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--nav-ico);font-weight:600;
+}
+.live-notif-sub{
+font-size:11.5px;font-style:italic;color:var(--nav-txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;
+}
+.live-notif-actions{display:flex;align-items:center;gap:6px;flex:none}
+.notif-ctrl{
+background:rgba(255,255,255,.05);border:1px solid var(--nav-line);color:#efe6d4;
+font-family:var(--serif);font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;font-weight:600;
+height:32px;padding:0 10px;border-radius:4px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;transition:.16s;
+}
+.notif-ctrl:hover{border-color:var(--nav-ico);color:var(--nav-ico);background:rgba(217,184,120,.1)}
+.notif-ctrl.primary{
+background:linear-gradient(180deg, var(--btn-a), var(--btn-b));color:var(--btn-txt);border-color:var(--btn-line);
+padding:0 13px;
+}
+.notif-ctrl.icon-only{width:32px;padding:0;font-size:13px}
+
+.toast{
+position:fixed;left:50%;bottom:134px;transform:translate(-50%, 18px);z-index:92;
+background:linear-gradient(180deg, #9c3a44, #7d2830);
+color:#fdf6e7;border:1px solid #6d1f27;border-radius:4px;
+padding:12px 26px;font-family:var(--serif);font-size:12px;letter-spacing:2.4px;
+text-transform:uppercase;font-weight:600;box-shadow:0 16px 36px rgba(0,0,0,.55);
+opacity:0;pointer-events:none;transition:opacity .28s ease, transform .28s ease;
+text-align:center;line-height:1.45;width:max-content;max-width:min(340px, 88vw);
+}
+.toast.show{opacity:1;transform:translate(-50%, 0)}
+
+.modal-backdrop{
+position:fixed;inset:0;z-index:95;background:rgba(19,16,9,.62);
+display:none;place-items:center;padding:18px;backdrop-filter:blur(2px);
+}
+.modal-backdrop.open{display:grid;animation:fade .22s ease}
+.modal-card{
+width:min(460px,100%);max-height:90vh;overflow-y:auto;background:var(--card);border:1px solid var(--rule);
+border-radius:4px;padding:24px;box-shadow:var(--shadow);position:relative;
+}
+.modal-card::after{content:"";position:absolute;inset:5px;border:1px solid var(--rule-2);border-radius:2px;pointer-events:none}
+.modal-card > *{position:relative;z-index:1}
+.settings-grid{display:grid;grid-template-columns:1fr 112px;gap:12px;align-items:center;margin-bottom:16px}
+.settings-grid label{font-size:13.5px;color:var(--ink)}
+.settings-grid small{display:block;font-size:11px;font-style:italic;color:var(--muted)}
+
+@media (max-width:640px){
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .tiles.three{grid-template-columns:1fr}
+  .dial{width:264px;height:264px}
+  .time{font-size:52px}
+  .card{padding:20px 16px}
+  .brand{font-size:28px}
+  .stamp{padding-left:0}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- ============================================================
+       MASTHEAD
+       ============================================================ -->
+  <header class="masthead">
+    <div>
+      <div class="brand">
+        <span class="mark" aria-hidden="true">❦</span>
+        <span>Focus Flow</span>
+      </div>
+      <div class="stamp" id="dateStamp">MONDAY 19 OCTOBER</div>
+    </div>
+    <div class="head-actions">
+      <button type="button" class="btn icon" id="notifCenterBtn" title="Toggle Live Notification Controller" aria-label="Toggle Notification Controller">&#x1F514;&#xFE0E;</button>
+      <button type="button" class="btn icon" id="themeToggleBtn" title="Toggle Parchment / Nocturne Theme" aria-label="Toggle Theme">☾</button>
+      <button type="button" class="btn" id="settingsBtn"><span aria-hidden="true">&#x2699;&#xFE0E;</span> SETTINGS</button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       VIEW 1: FOCUS (POMODORO TIMER)
+       ============================================================ -->
+  <section class="view active" id="view-timer" aria-label="Focus Timer">
+    <div class="view-head">
+      <div>
+        <h2>Focus</h2>
+        <div class="sub">One session at a time — begin, and let the rest wait.</div>
+      </div>
+      <div class="orn" aria-hidden="true">❦</div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab active" data-mode="focus" role="tab" aria-selected="true">FOCUS</button>
+          <button type="button" class="tab" data-mode="short" role="tab" aria-selected="false">SHORT BREAK</button>
+          <button type="button" class="tab" data-mode="long" role="tab" aria-selected="false">LONG BREAK</button>
+        </div>
+
+        <div class="dial-wrap">
+          <div class="dial">
+            <svg viewBox="0 0 296 296" aria-hidden="true">
+              <circle class="rules" cx="148" cy="148" r="142" stroke-width="1" opacity="0.75"></circle>
+              <g id="dialTicks" class="rules"></g>
+              <circle class="rules" cx="148" cy="148" r="108" stroke-width="1.5" opacity="0.35"></circle>
+              <circle class="rules" cx="148" cy="148" r="96" stroke-width="0.9" opacity="0.65"></circle>
+              <circle class="ring-fg" id="ringFg" cx="148" cy="148" r="108" transform="rotate(-90 148 148)" stroke-dasharray="678.58" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="dial-inner">
+              <div class="time" id="timerDisplay">45:00</div>
+              <div class="label" id="timerLabel">FOCUS</div>
+              <div class="cycle-dots" id="cycleDots" title="Four Focus sessions complete a cycle">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rest-note" id="focusNote">Step away from your desk — rest your eyes and breathe unhurriedly.</div>
+
+        <div class="controls">
+          <button type="button" class="btn icon" id="resetTimerBtn" title="Reset Timer" aria-label="Reset Timer">&#x21BA;&#xFE0E;</button>
+          <button type="button" class="btn primary" id="startPauseBtn">BEGIN</button>
+          <button type="button" class="btn icon" id="skipTimerBtn" title="Skip / Complete Session" aria-label="Skip Session">&#x23ED;&#xFE0E;</button>
+        </div>
+      </div>
+
+      <div class="card tight">
+        <div class="tiles">
+          <div class="tile">
+            <b id="statPomodoros">0</b>
+            <span>POMODOROS</span>
+          </div>
+          <div class="tile">
+            <b id="statMinutes">0</b>
+            <span>FOCUS MIN</span>
+          </div>
+          <div class="tile">
+            <b id="statTasksDone">0</b>
+            <span>TASKS DONE</span>
+          </div>
+          <div class="tile">
+            <b id="statBestStreak">0</b>
+            <span>HABITS TODAY</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card tight">
+        <div class="section-title">Today's Completed Sessions</div>
+        <div class="today-log" id="todayLog">
+          <span class="log-empty">No sessions completed yet today.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW 2: TASKS (TASK LEDGER)
+       ============================================================ -->
+  <section class="view" id="view-tasks" aria-label="Task Ledger">
+    <div class="view-head">
+      <div>
+        <h2>Tasks</h2>
+        <div class="sub">Inscribe your intentions and bind an active task to the timer.</div>
+      </div>
+      <div class="orn" aria-hidden="true">❦</div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="section-title">New Ledger Entry</div>
+        <form class="form-row" id="taskForm">
+          <input type="text" class="inp" id="taskTitleInput" placeholder="Describe the task to be done…" required maxlength="100">
+          <input type="number" class="inp time" id="taskEstInput" min="1" max="16" value="1" title="Estimated Pomodoros" aria-label="Estimated Pomodoros">
+          <button type="submit" class="add-btn" title="Add Task" aria-label="Add Task">+</button>
+        </form>
+
+        <div class="section-title">Task Ledger</div>
+        <ul class="tasks" id="taskList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW 3: HABITS
+       ============================================================ -->
+  <section class="view" id="view-habits" aria-label="Habit Tracker">
+    <div class="view-head">
+      <div>
+        <h2>Habits</h2>
+        <div class="sub">Small promises, kept daily — each with its own days and hour.</div>
+      </div>
+      <div class="orn" aria-hidden="true">❦</div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="section-title">ADD A HABIT</div>
+        <form id="habitForm">
+          <div class="form-row">
+            <input type="text" class="inp" id="habitNameInput" placeholder="e.g. Morning walk" required maxlength="80">
+            <input type="time" class="inp time" id="habitCueInput" value="08:00" aria-label="Habit Time">
+          </div>
+          <div class="form-row wrap" style="margin-bottom:0">
+            <div class="chips" id="newHabitDayChips" aria-label="Scheduled Days of the Week">
+              <button type="button" class="chip on" data-day="0">Mo</button>
+              <button type="button" class="chip on" data-day="1">Tu</button>
+              <button type="button" class="chip on" data-day="2">We</button>
+              <button type="button" class="chip on" data-day="3">Th</button>
+              <button type="button" class="chip on" data-day="4">Fr</button>
+              <button type="button" class="chip on" data-day="5">Sa</button>
+              <button type="button" class="chip on" data-day="6">Su</button>
+            </div>
+            <button type="submit" class="add-btn wide">ADD</button>
+          </div>
+          <div class="habit-hint" id="habitFormHint">Every day · 8:00 am</div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="section-title">YOUR HABITS</div>
+        <div class="habit-summary" id="habitSummaryLine">1 of 3 kept today · 3 habits tracked</div>
+        <ul class="habits" id="habitList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW 4: STATS / PROGRESS
+       ============================================================ -->
+  <section class="view" id="view-chronicle" aria-label="Progress and Statistics">
+    <div class="view-head">
+      <div>
+        <h2>Progress</h2>
+        <div class="sub">A ledger of what you have actually done.</div>
+      </div>
+      <div class="orn" aria-hidden="true">❦</div>
+    </div>
+
+    <div class="stack">
+      <div class="card tight">
+        <div class="tiles">
+          <div class="tile">
+            <b id="chronTotalPoms">1</b>
+            <span>POMODOROS</span>
+          </div>
+          <div class="tile">
+            <b id="chronFocusHours">45</b>
+            <span>FOCUS MIN</span>
+          </div>
+          <div class="tile">
+            <b id="chronTasksDone">0</b>
+            <span>TASKS DONE</span>
+          </div>
+          <div class="tile">
+            <b id="chronHabitRate">0</b>
+            <span>HABITS TODAY</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">FOCUS · LAST SEVEN DAYS</div>
+        <div class="chart" id="weeklyChart"></div>
+        <div class="chart-foot" id="chartFootNote">45 focused minutes across the last seven days.</div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">HABIT PROGRESS</div>
+        <div id="habitOverviewList"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">WEEKLY REGIMEN</div>
+        <div id="regimenScheduleList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOPHON -->
+  <footer class="colophon">
+    <div>Focus Flow <span class="mark">❦</span> By <strong>Giridharan</strong></div>
+    <small>A Quiet Instrument for Deliberate Work &amp; Daily Constancy</small>
+  </footer>
+</div>
+
+<!-- ============================================================
+     INTERACTIVE NOTIFICATION BAR (Play / Pause / Reset / Skip / Mode)
+     ============================================================ -->
+<div class="live-notif" id="liveNotifBar" role="region" aria-label="Live Session Notification Controls">
+  <div class="live-notif-info">
+    <div class="live-notif-badge" aria-hidden="true">❦</div>
+    <div class="live-notif-text">
+      <div class="live-notif-title">
+        <span id="notifTimeDisplay">45:00</span>
+        <small id="notifModeDisplay">FOCUS</small>
+      </div>
+      <div class="live-notif-sub" id="notifSubText">Ready — control session from anywhere</div>
+    </div>
+  </div>
+  <div class="live-notif-actions">
+    <button type="button" class="notif-ctrl primary" id="notifPlayPauseBtn" title="Play or Pause Session">PLAY</button>
+    <button type="button" class="notif-ctrl icon-only" id="notifResetBtn" title="Reset Session" aria-label="Reset Session">&#x21BA;&#xFE0E;</button>
+    <button type="button" class="notif-ctrl icon-only" id="notifSkipBtn" title="Skip / Complete Step" aria-label="Skip Session">&#x23ED;&#xFE0E;</button>
+    <button type="button" class="notif-ctrl" id="notifModeBtn" title="Switch Timer Mode">MODE</button>
+    <button type="button" class="notif-ctrl icon-only" id="notifCloseBtn" title="Hide Notification Bar" aria-label="Hide Notification Bar">✕</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     SETTINGS MODAL (Opened via ⚙ SETTINGS)
+     ============================================================ -->
+<div class="modal-backdrop" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+  <div class="modal-card">
+    <div class="section-title" id="settingsModalTitle">Horologium &amp; Audio Settings</div>
+    <div class="settings-grid">
+      <label for="setFocusInput">
+        Focus Duration (Minutes)
+        <small>Default: 45 minutes (or classic 25)</small>
+      </label>
+      <input type="number" class="inp" id="setFocusInput" min="1" max="120" value="45">
+
+      <label for="setShortInput">
+        Short Break (Minutes)
+        <small>Brief restorative pause</small>
+      </label>
+      <input type="number" class="inp" id="setShortInput" min="1" max="60" value="5">
+
+      <label for="setLongInput">
+        Long Break (Minutes)
+        <small>After four Focus sessions</small>
+      </label>
+      <input type="number" class="inp" id="setLongInput" min="1" max="90" value="15">
+
+      <label for="lofiTouchToggleBtn">
+        Lo-Fi Touch Sounds
+        <small>Warm analog sound on every button &amp; icon touch</small>
+      </label>
+      <button type="button" class="btn sm" id="lofiTouchToggleBtn">ON</button>
+
+      <label for="soundToggleBtn">
+        Completion Chime
+        <small>Play gentle chord when timer ends</small>
+      </label>
+      <button type="button" class="btn sm" id="soundToggleBtn">ON</button>
+
+      <label for="notifPermBtn">
+        System &amp; Lock-Screen Notifications
+        <small>Interactive Play / Pause / Skip controls</small>
+      </label>
+      <button type="button" class="btn sm" id="notifPermBtn">ENABLE</button>
+    </div>
+
+    <div class="edit-actions">
+      <button type="button" class="btn sm" id="closeSettingsBtn">Cancel</button>
+      <button type="button" class="btn sm primary" id="saveSettingsBtn">Save Regimen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOAST BANNER
+     ============================================================ -->
+<div class="toast" id="toastBanner" role="status" aria-live="polite">BREAK OVER — TO YOUR DESK</div>
+
+<!-- ============================================================
+     BOTTOM NAVIGATION BAR (FOCUS · TASKS · HABITS · STATS)
+     ============================================================ -->
+<nav class="tabbar" aria-label="Primary Navigation">
+  <button type="button" class="nav-btn active" data-target="view-timer">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <span>FOCUS</span>
+  </button>
+  <button type="button" class="nav-btn" data-target="view-tasks">
+    <svg viewBox="0 0 24 24"><path d="M4 7l2 2 4-4M4 17l2 2 4-4M13 6h7M13 12h7M13 18h7"/></svg>
+    <span>TASKS</span>
+  </button>
+  <button type="button" class="nav-btn" data-target="view-habits">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11M15 9v11"/></svg>
+    <span>HABITS</span>
+  </button>
+  <button type="button" class="nav-btn" data-target="view-chronicle">
+    <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6M3 20h18"/></svg>
+    <span>STATS</span>
+  </button>
+</nav>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ============================================================
+     1. STATE & STORAGE HELPERS
+     ============================================================ */
+  const STORAGE_KEY = 'focus_flow_giridharan_v5';
+  const DAY_CHIP = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+  const DAY_COL_HEADER = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+  const DAY_FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  function isoDate(d) {
+    const yr = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const da = String(d.getDate()).padStart(2, '0');
+    return yr + '-' + mo + '-' + da;
+  }
+
+  function getTodayISO() {
+    return isoDate(new Date());
+  }
+
+  function getMonFirstDayIndex(d) {
+    return (d.getDay() + 6) % 7;
+  }
+
+  function getCurrentWeekDates() {
+    const now = new Date();
+    const dayIdx = getMonFirstDayIndex(now);
+    const mon = new Date(now);
+    mon.setDate(now.getDate() - dayIdx);
+    const arr = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(mon);
+      d.setDate(mon.getDate() + i);
+      arr.push(d);
+    }
+    return arr;
+  }
+
+  function formatTime12h(timeStr) {
+    if (!timeStr) return '8:00 am';
+    const match = String(timeStr).match(/^(\d{1,2}):(\d{2})/);
+    if (!match) return timeStr;
+    let h = parseInt(match[1], 10);
+    const m = match[2];
+    const ampm = h >= 12 ? 'pm' : 'am';
+    h = h % 12;
+    if (h === 0) h = 12;
+    return h + ':' + m + ' ' + ampm;
+  }
+
+  function formatDaysSchedule(days) {
+    if (!days || days.length === 0 || days.length === 7) return 'Every day';
+    const sorted = days.slice().sort(function(a, b) { return a - b; });
+    const key = sorted.join(',');
+    if (key === '0,1,2,3,4') return 'Weekdays';
+    if (key === '5,6') return 'Weekends';
+    return sorted.map(function(d) { return DAY_CHIP[d]; }).join(', ');
+  }
+
+  function buildInitialHabitChecks() {
+    const checks = {};
+    const now = new Date();
+    for (let i = 0; i < 3; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      checks[isoDate(d)] = true;
+    }
+    return checks;
+  }
+
+  const todayInitialISO = getTodayISO();
+
+  const defaultState = {
+    theme: 'parchment',
+    soundEnabled: true,
+    lofiTouchEnabled: true,
+    notifDrawerVisible: false,
+    durations: {
+      focus: 45,
+      short: 5,
+      long: 15
+    },
+    activeTaskId: null,
+    cycleCount: 1,
+    history: {
+      [todayInitialISO]: { pomodoros: 1, minutes: 45 }
+    },
+    tasks: [
+      { id: 't1', title: 'Draft architecture notes for Focus Flow', est: 3, completedPoms: 1, done: false },
+      { id: 't2', title: 'Review typography & parchment colour tokens', est: 2, completedPoms: 0, done: false },
+      { id: 't3', title: 'Refine weekly habit constancy ledger', est: 2, completedPoms: 0, done: false }
+    ],
+    habits: [
+      {
+        id: 'h1',
+        name: 'Read twenty pages',
+        cue: '21:00',
+        days: [0, 1, 2, 3, 4, 5, 6],
+        checks: buildInitialHabitChecks()
+      },
+      {
+        id: 'h2',
+        name: 'Drink eight glasses of water',
+        cue: '09:00',
+        days: [0, 1, 2, 3, 4, 5, 6],
+        checks: {}
+      },
+      {
+        id: 'h3',
+        name: 'Morning walk',
+        cue: '08:00',
+        days: [0, 1, 2, 3, 4, 5, 6],
+        checks: {}
+      }
+    ]
+  };
+
+  let state = loadState();
+  let editingHabitId = null;
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const merged = Object.assign({}, defaultState, parsed);
+        merged.durations = Object.assign({}, defaultState.durations, parsed.durations || {});
+        return merged;
+      }
+    } catch (e) {
+      // ignore storage errors
+    }
+    return JSON.parse(JSON.stringify(defaultState));
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      // ignore storage errors
+    }
+  }
+
+  function getModeConfig(mode) {
+    const mins = (state.durations && state.durations[mode]) || defaultState.durations[mode];
+    if (mode === 'focus') return { label: 'FOCUS', seconds: mins * 60, color: 'var(--focus)', mins: mins };
+    if (mode === 'short') return { label: 'SHORT BREAK', seconds: mins * 60, color: 'var(--short)', mins: mins };
+    return { label: 'LONG BREAK', seconds: mins * 60, color: 'var(--long)', mins: mins };
+  }
+
+  /* ============================================================
+     2. DRAW 60 WATCH-FACE TICKS ON SVG DIAL
+     ============================================================ */
+  function buildDialTicks() {
+    const g = document.getElementById('dialTicks');
+    if (!g) return;
+    let svgLines = '';
+    const cx = 148;
+    const cy = 148;
+    for (let i = 0; i < 60; i++) {
+      const angle = (i * 6) * (Math.PI / 180);
+      const isMajor = i % 5 === 0;
+      const rOuter = 135;
+      const rInner = isMajor ? 120 : 126;
+      const x1 = (cx + rInner * Math.sin(angle)).toFixed(2);
+      const y1 = (cy - rInner * Math.cos(angle)).toFixed(2);
+      const x2 = (cx + rOuter * Math.sin(angle)).toFixed(2);
+      const y2 = (cy - rOuter * Math.cos(angle)).toFixed(2);
+      const sw = isMajor ? '1.3' : '0.8';
+      const op = isMajor ? '0.85' : '0.45';
+      svgLines += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke-width="' + sw + '" opacity="' + op + '"></line>';
+    }
+    g.innerHTML = svgLines;
+  }
+
+  /* ============================================================
+     3. LO-FI TACTILE TOUCH SYNTHESIZER & COMPLETION CHIME
+     ============================================================ */
+  let audioCtx = null;
+  function ensureAudioCtx() {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    if (!audioCtx) audioCtx = new AudioContextClass();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  const LOFI_SCALES = [261.63, 293.66, 329.63, 392.00, 440.00, 493.88]; // Cmaj9 pentatonic
+  let scaleStep = 0;
+
+  function playLofiTouch(kind) {
+    if (!state.lofiTouchEnabled) return;
+    try {
+      const ctx = ensureAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(kind === 'stamp' ? 1350 : 920, now);
+      filter.Q.setValueAtTime(1.2, now);
+      filter.connect(ctx.destination);
+
+      if (kind === 'primary') {
+        const freqs = [261.63, 329.63];
+        freqs.forEach(function(f, i) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, now + i * 0.025);
+          gain.gain.setValueAtTime(0.001, now + i * 0.025);
+          gain.gain.linearRampToValueAtTime(0.09, now + i * 0.025 + 0.012);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.025 + 0.24);
+          osc.connect(gain);
+          gain.connect(filter);
+          osc.start(now + i * 0.025);
+          osc.stop(now + i * 0.025 + 0.26);
+        });
+      } else if (kind === 'stamp') {
+        const freqs = [392.00, 587.33];
+        freqs.forEach(function(f, i) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, now + i * 0.045);
+          gain.gain.setValueAtTime(0.001, now + i * 0.045);
+          gain.gain.linearRampToValueAtTime(0.11, now + i * 0.045 + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.045 + 0.32);
+          osc.connect(gain);
+          gain.connect(filter);
+          osc.start(now + i * 0.045);
+          osc.stop(now + i * 0.045 + 0.34);
+        });
+      } else if (kind === 'nav') {
+        const note = LOFI_SCALES[scaleStep % LOFI_SCALES.length];
+        scaleStep += 1;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(note, now);
+        osc.frequency.exponentialRampToValueAtTime(note * 0.994, now + 0.16);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.08, now + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+        osc.connect(gain);
+        gain.connect(filter);
+        osc.start(now);
+        osc.stop(now + 0.19);
+      } else {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(210, now);
+        osc.frequency.exponentialRampToValueAtTime(115, now + 0.065);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.085, now + 0.006);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+        osc.connect(gain);
+        gain.connect(filter);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      }
+    } catch (e) {
+      // ignore audio context errors
+    }
+  }
+
+  document.addEventListener('pointerdown', function(e) {
+    const target = e.target.closest('button, .check, .cell, .chip, .nav-btn, .tab, .notif-ctrl, .task-txt, input');
+    if (!target) return;
+    if (target.classList.contains('primary')) {
+      playLofiTouch('primary');
+    } else if (target.classList.contains('cell') || target.classList.contains('check')) {
+      playLofiTouch('stamp');
+    } else if (target.classList.contains('nav-btn') || target.classList.contains('tab')) {
+      playLofiTouch('nav');
+    } else {
+      playLofiTouch('tap');
+    }
+  }, { passive: true });
+
+  function playChime() {
+    if (!state.soundEnabled) return;
+    try {
+      const ctx = ensureAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 987.77];
+      notes.forEach(function(freq, idx) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.14);
+        gain.gain.setValueAtTime(0.001, now + idx * 0.14);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.14 + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.14 + 1.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.14);
+        osc.stop(now + idx * 0.14 + 1.3);
+      });
+    } catch (e) {
+      // ignore audio error
+    }
+  }
+
+  let toastTimeout = null;
+  const toastBannerEl = document.getElementById('toastBanner');
+  function showToast(msg) {
+    toastBannerEl.textContent = msg || 'SESSION COMPLETE!';
+    toastBannerEl.classList.add('show');
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(function() {
+      toastBannerEl.classList.remove('show');
+    }, 3200);
+  }
+
+  /* ============================================================
+     4. INTERACTIVE NOTIFICATIONS (In-App + System + MediaSession)
+     ============================================================ */
+  const liveNotifBar = document.getElementById('liveNotifBar');
+  const notifCenterBtn = document.getElementById('notifCenterBtn');
+  const notifTimeDisplay = document.getElementById('notifTimeDisplay');
+  const notifModeDisplay = document.getElementById('notifModeDisplay');
+  const notifSubText = document.getElementById('notifSubText');
+  const notifPlayPauseBtn = document.getElementById('notifPlayPauseBtn');
+  const notifResetBtn = document.getElementById('notifResetBtn');
+  const notifSkipBtn = document.getElementById('notifSkipBtn');
+  const notifModeBtn = document.getElementById('notifModeBtn');
+  const notifCloseBtn = document.getElementById('notifCloseBtn');
+  const notifPermBtn = document.getElementById('notifPermBtn');
+
+  function sendSystemNotification(title, body) {
+    try {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        const n = new Notification(title, {
+          body: body,
+          tag: 'focus-flow-timer',
+          renotify: true
+        });
+        n.onclick = function() {
+          window.focus();
+          n.close();
+        };
+      }
+    } catch (e) {
+      // ignore sandbox notification restrictions
+    }
+  }
+
+  function updateMediaSessionMetadata() {
+    try {
+      if ('mediaSession' in navigator && window.MediaMetadata) {
+        const cfg = getModeConfig(currentMode);
+        const activeTask = state.tasks.find(function(t) { return t.id === state.activeTaskId && !t.done; });
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: formatMMSS(remainingSeconds) + ' · ' + cfg.label,
+          artist: activeTask ? activeTask.title : 'Focus Flow by Giridharan',
+          album: 'Pomodoro Regimen'
+        });
+        navigator.mediaSession.playbackState = isRunning ? 'playing' : 'paused';
+      }
+    } catch (e) {
+      // ignore mediaSession errors
+    }
+  }
+
+  function initMediaSessionHandlers() {
+    try {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('play', function() {
+          if (!isRunning) toggleStartPause();
+        });
+        navigator.mediaSession.setActionHandler('pause', function() {
+          if (isRunning) toggleStartPause();
+        });
+        navigator.mediaSession.setActionHandler('previoustrack', function() {
+          resetTimer();
+        });
+        navigator.mediaSession.setActionHandler('nexttrack', function() {
+          completeCurrentInterval();
+        });
+      }
+    } catch (e) {
+      // ignore unsupported handlers
+    }
+  }
+
+  function updateLiveNotificationBar() {
+    const cfg = getModeConfig(currentMode);
+    notifTimeDisplay.textContent = formatMMSS(remainingSeconds);
+    notifModeDisplay.textContent = cfg.label;
+    notifPlayPauseBtn.textContent = isRunning ? 'PAUSE' : (remainingSeconds < totalSeconds ? 'RESUME' : 'PLAY');
+
+    const activeTask = state.tasks.find(function(t) { return t.id === state.activeTaskId && !t.done; });
+    if (isRunning) {
+      notifSubText.textContent = activeTask
+        ? 'Focusing: ' + activeTask.title
+        : 'Session in progress — pause, reset, or skip anytime';
+    } else if (remainingSeconds < totalSeconds) {
+      notifSubText.textContent = 'Session paused — tap Resume to continue';
+    } else {
+      notifSubText.textContent = activeTask
+        ? 'Bound task: ' + activeTask.title
+        : 'Interactive controller — Play, Pause, Reset, or Switch Mode';
+    }
+
+    const shouldShow = state.notifDrawerVisible || isRunning || remainingSeconds < totalSeconds;
+    liveNotifBar.classList.toggle('show', shouldShow);
+    updateMediaSessionMetadata();
+  }
+
+  notifCenterBtn.addEventListener('click', function() {
+    state.notifDrawerVisible = !liveNotifBar.classList.contains('show');
+    saveState();
+    updateLiveNotificationBar();
+  });
+
+  notifCloseBtn.addEventListener('click', function() {
+    state.notifDrawerVisible = false;
+    saveState();
+    liveNotifBar.classList.remove('show');
+  });
+
+  notifPlayPauseBtn.addEventListener('click', function() {
+    toggleStartPause();
+  });
+
+  notifResetBtn.addEventListener('click', function() {
+    resetTimer();
+  });
+
+  notifSkipBtn.addEventListener('click', function() {
+    completeCurrentInterval();
+  });
+
+  notifModeBtn.addEventListener('click', function() {
+    const order = ['focus', 'short', 'long'];
+    const nextIdx = (order.indexOf(currentMode) + 1) % order.length;
+    setMode(order[nextIdx]);
+    state.notifDrawerVisible = true;
+    updateLiveNotificationBar();
+  });
+
+  function updateNotifPermBtnUI() {
+    try {
+      if (!('Notification' in window)) {
+        notifPermBtn.textContent = 'IN-APP ACTIVE';
+        return;
+      }
+      if (Notification.permission === 'granted') {
+        notifPermBtn.textContent = 'GRANTED';
+      } else if (Notification.permission === 'denied') {
+        notifPermBtn.textContent = 'IN-APP MODE';
+      } else {
+        notifPermBtn.textContent = 'ENABLE';
+      }
+    } catch (e) {
+      notifPermBtn.textContent = 'IN-APP ACTIVE';
+    }
+  }
+
+  notifPermBtn.addEventListener('click', function() {
+    state.notifDrawerVisible = true;
+    updateLiveNotificationBar();
+    try {
+      if ('Notification' in window && Notification.permission !== 'granted') {
+        Notification.requestPermission().then(function(perm) {
+          updateNotifPermBtnUI();
+          if (perm === 'granted') {
+            sendSystemNotification('Focus Flow Notifications Active', 'You can now control and monitor sessions from the notification bar.');
+          }
+        }).catch(function() {
+          updateNotifPermBtnUI();
+        });
+      } else {
+        sendSystemNotification('Focus Flow Live Controller', 'Interactive Play, Pause, Reset, and Skip controls are active.');
+      }
+    } catch (e) {
+      // fallback to in-app notification controller
+    }
+    showToast('NOTIFICATION CONTROLLER ACTIVE');
+  });
+
+  /* ============================================================
+     5. THEME, SETTINGS MODAL & MASTHEAD DATE
+     ============================================================ */
+  const dateStampEl = document.getElementById('dateStamp');
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const soundToggleBtn = document.getElementById('soundToggleBtn');
+  const lofiTouchToggleBtn = document.getElementById('lofiTouchToggleBtn');
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsModal = document.getElementById('settingsModal');
+  const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+  const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+  const setFocusInput = document.getElementById('setFocusInput');
+  const setShortInput = document.getElementById('setShortInput');
+  const setLongInput = document.getElementById('setLongInput');
+  const metaThemeColor = document.getElementById('metaThemeColor');
+
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', state.theme);
+    themeToggleBtn.textContent = state.theme === 'parchment' ? '☾' : '☀';
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', state.theme === 'parchment' ? '#ece3d0' : '#131009');
+    }
+  }
+
+  function applySoundUI() {
+    soundToggleBtn.textContent = state.soundEnabled ? 'ON' : 'MUTED';
+    lofiTouchToggleBtn.textContent = state.lofiTouchEnabled ? 'ON' : 'MUTED';
+    updateNotifPermBtnUI();
+  }
+
+  function updateMastheadDate() {
+    const now = new Date();
+    const weekday = now.toLocaleDateString('en-GB', { weekday: 'long' }).toUpperCase();
+    const day = now.getDate();
+    const month = now.toLocaleDateString('en-GB', { month: 'long' }).toUpperCase();
+    dateStampEl.textContent = weekday + ' ' + day + ' ' + month;
+  }
+
+  themeToggleBtn.addEventListener('click', function() {
+    state.theme = state.theme === 'parchment' ? 'nocturne' : 'parchment';
+    saveState();
+    applyTheme();
+  });
+
+  soundToggleBtn.addEventListener('click', function() {
+    state.soundEnabled = !state.soundEnabled;
+    saveState();
+    applySoundUI();
+    if (state.soundEnabled) playChime();
+  });
+
+  lofiTouchToggleBtn.addEventListener('click', function() {
+    state.lofiTouchEnabled = !state.lofiTouchEnabled;
+    saveState();
+    applySoundUI();
+    if (state.lofiTouchEnabled) playLofiTouch('primary');
+  });
+
+  settingsBtn.addEventListener('click', function() {
+    setFocusInput.value = String(state.durations.focus || 45);
+    setShortInput.value = String(state.durations.short || 5);
+    setLongInput.value = String(state.durations.long || 15);
+    applySoundUI();
+    settingsModal.classList.add('open');
+  });
+
+  closeSettingsBtn.addEventListener('click', function() {
+    settingsModal.classList.remove('open');
+  });
+
+  settingsModal.addEventListener('click', function(e) {
+    if (e.target === settingsModal) {
+      settingsModal.classList.remove('open');
+    }
+  });
+
+  saveSettingsBtn.addEventListener('click', function() {
+    const f = Math.max(1, Math.min(120, parseInt(setFocusInput.value, 10) || 45));
+    const s = Math.max(1, Math.min(60, parseInt(setShortInput.value, 10) || 5));
+    const l = Math.max(1, Math.min(90, parseInt(setLongInput.value, 10) || 15));
+    state.durations = { focus: f, short: s, long: l };
+    saveState();
+    settingsModal.classList.remove('open');
+    setMode(currentMode);
+    showToast('SETTINGS SAVED');
+  });
+
+  /* ============================================================
+     6. NAVIGATION (4 VIEWS)
+     ============================================================ */
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const views = document.querySelectorAll('.view');
+
+  navBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const targetId = btn.getAttribute('data-target');
+      navBtns.forEach(function(b) { b.classList.toggle('active', b === btn); });
+      views.forEach(function(v) { v.classList.toggle('active', v.id === targetId); });
+      renderAll();
+    });
+  });
+
+  /* ============================================================
+     7. POMODORO TIMER ENGINE
+     ============================================================ */
+  const CIRCUMFERENCE = 2 * Math.PI * 108; // ~678.58
+  let currentMode = 'focus';
+  let totalSeconds = getModeConfig('focus').seconds;
+  let remainingSeconds = totalSeconds;
+  let timerInterval = null;
+  let isRunning = false;
+
+  const timerDisplayEl = document.getElementById('timerDisplay');
+  const timerLabelEl = document.getElementById('timerLabel');
+  const ringFgEl = document.getElementById('ringFg');
+  const startPauseBtn = document.getElementById('startPauseBtn');
+  const resetTimerBtn = document.getElementById('resetTimerBtn');
+  const skipTimerBtn = document.getElementById('skipTimerBtn');
+  const modeTabs = document.querySelectorAll('.tab[data-mode]');
+  const cycleDotsEl = document.getElementById('cycleDots');
+  const focusNoteEl = document.getElementById('focusNote');
+
+  function formatMMSS(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function stopInterval() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+    isRunning = false;
+    startPauseBtn.textContent = remainingSeconds < totalSeconds ? 'RESUME' : 'BEGIN';
+    updateLiveNotificationBar();
+  }
+
+  function setMode(mode) {
+    stopInterval();
+    currentMode = mode;
+    const cfg = getModeConfig(mode);
+    totalSeconds = cfg.seconds;
+    remainingSeconds = totalSeconds;
+    modeTabs.forEach(function(t) {
+      const active = t.getAttribute('data-mode') === mode;
+      t.classList.toggle('active', active);
+      t.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    ringFgEl.style.stroke = cfg.color;
+    updateTimerUI();
+  }
+
+  function updateTimerUI() {
+    const cfg = getModeConfig(currentMode);
+    const formatted = formatMMSS(remainingSeconds);
+    timerDisplayEl.textContent = formatted;
+    timerLabelEl.textContent = cfg.label;
+    document.title = isRunning
+      ? '(' + formatted + ' · ' + cfg.label + ') Focus Flow'
+      : 'Focus Flow — Pomodoro Regimen by Giridharan';
+
+    const fraction = totalSeconds > 0 ? (totalSeconds - remainingSeconds) / totalSeconds : 0;
+    const offset = CIRCUMFERENCE * fraction;
+    ringFgEl.style.strokeDasharray = String(CIRCUMFERENCE);
+    ringFgEl.style.strokeDashoffset = String(offset);
+
+    const dots = cycleDotsEl.querySelectorAll('.dot');
+    const filled = state.cycleCount % 4;
+    dots.forEach(function(dot, idx) {
+      dot.classList.toggle('done', idx < filled);
+    });
+
+    const activeTask = state.tasks.find(function(t) { return t.id === state.activeTaskId && !t.done; });
+    if (currentMode === 'focus') {
+      if (activeTask) {
+        focusNoteEl.classList.add('show');
+        focusNoteEl.textContent = 'Focusing on: ' + activeTask.title;
+      } else {
+        focusNoteEl.classList.remove('show');
+      }
+    } else {
+      focusNoteEl.classList.add('show');
+      focusNoteEl.textContent = currentMode === 'short'
+        ? 'Step away from your desk — rest your eyes and breathe unhurriedly.'
+        : 'A restorative long break after four completed sessions.';
+    }
+    updateLiveNotificationBar();
+  }
+
+  function completeCurrentInterval() {
+    stopInterval();
+    playChime();
+    state.notifDrawerVisible = true;
+
+    if (currentMode === 'focus') {
+      showToast('SESSION COMPLETE!');
+      sendSystemNotification('Focus Session Complete!', 'Well done. Time for a restorative break.');
+      const cfg = getModeConfig('focus');
+      const today = getTodayISO();
+      if (!state.history[today]) {
+        state.history[today] = { pomodoros: 0, minutes: 0 };
+      }
+      state.history[today].pomodoros += 1;
+      state.history[today].minutes += cfg.mins;
+      state.cycleCount = (state.cycleCount || 0) + 1;
+
+      if (state.activeTaskId) {
+        const task = state.tasks.find(function(t) { return t.id === state.activeTaskId; });
+        if (task) {
+          task.completedPoms = (task.completedPoms || 0) + 1;
+        }
+      }
+      saveState();
+      const nextMode = (state.cycleCount % 4 === 0) ? 'long' : 'short';
+      setMode(nextMode);
+    } else {
+      showToast('BREAK OVER — TO YOUR DESK');
+      sendSystemNotification('Break Over — To Your Desk', 'Ready to begin your next Focus session.');
+      setMode('focus');
+    }
+    renderAll();
+  }
+
+  function toggleStartPause() {
+    if (isRunning) {
+      stopInterval();
+      return;
+    }
+    isRunning = true;
+    state.notifDrawerVisible = true;
+    startPauseBtn.textContent = 'PAUSE';
+    updateLiveNotificationBar();
+    timerInterval = setInterval(function() {
+      if (remainingSeconds > 1) {
+        remainingSeconds -= 1;
+        updateTimerUI();
+      } else {
+        remainingSeconds = 0;
+        updateTimerUI();
+        completeCurrentInterval();
+      }
+    }, 1000);
+  }
+
+  function resetTimer() {
+    stopInterval();
+    remainingSeconds = totalSeconds;
+    startPauseBtn.textContent = 'BEGIN';
+    updateTimerUI();
+  }
+
+  startPauseBtn.addEventListener('click', toggleStartPause);
+  resetTimerBtn.addEventListener('click', resetTimer);
+  skipTimerBtn.addEventListener('click', completeCurrentInterval);
+
+  modeTabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      setMode(tab.getAttribute('data-mode'));
+    });
+  });
+
+  /* ============================================================
+     8. TASK LEDGER
+     ============================================================ */
+  const taskForm = document.getElementById('taskForm');
+  const taskTitleInput = document.getElementById('taskTitleInput');
+  const taskEstInput = document.getElementById('taskEstInput');
+  const taskListEl = document.getElementById('taskList');
+
+  taskForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const title = taskTitleInput.value.trim();
+    if (!title) return;
+    const est = Math.max(1, Math.min(16, parseInt(taskEstInput.value, 10) || 1));
+    const newTask = {
+      id: 't_' + Date.now(),
+      title: title,
+      est: est,
+      completedPoms: 0,
+      done: false
+    };
+    state.tasks.unshift(newTask);
+    taskTitleInput.value = '';
+    taskEstInput.value = '1';
+    saveState();
+    renderAll();
+  });
+
+  function renderTasks() {
+    taskListEl.innerHTML = '';
+    if (state.tasks.length === 0) {
+      const emptyLi = document.createElement('li');
+      emptyLi.className = 'empty';
+      emptyLi.textContent = 'The ledger is clear. Add a task above to begin.';
+      taskListEl.appendChild(emptyLi);
+      return;
+    }
+
+    state.tasks.forEach(function(task) {
+      const li = document.createElement('li');
+      const isActive = task.id === state.activeTaskId && !task.done;
+      li.className = 'task' + (isActive ? ' active-task' : '');
+
+      const checkBtn = document.createElement('button');
+      checkBtn.type = 'button';
+      checkBtn.className = 'check' + (task.done ? ' on' : '');
+      checkBtn.setAttribute('aria-label', task.done ? 'Mark incomplete' : 'Mark complete');
+      checkBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fdfaf2" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      checkBtn.addEventListener('click', function() {
+        task.done = !task.done;
+        if (task.done && state.activeTaskId === task.id) {
+          state.activeTaskId = null;
+        }
+        saveState();
+        renderAll();
+      });
+
+      const txtSpan = document.createElement('span');
+      txtSpan.className = 'task-txt' + (task.done ? ' done' : '');
+      txtSpan.textContent = task.title;
+      txtSpan.title = 'Click to focus on this task';
+      txtSpan.addEventListener('click', function() {
+        if (!task.done) {
+          state.activeTaskId = state.activeTaskId === task.id ? null : task.id;
+          saveState();
+          renderAll();
+        }
+      });
+
+      const pomSpan = document.createElement('span');
+      pomSpan.className = 'pom-count';
+      pomSpan.textContent = (task.completedPoms || 0) + ' / ' + task.est + ' ❦';
+
+      const bindBtn = document.createElement('button');
+      bindBtn.type = 'button';
+      bindBtn.className = 'mini';
+      bindBtn.textContent = isActive ? 'Active' : 'Select';
+      bindBtn.addEventListener('click', function() {
+        if (task.done) task.done = false;
+        state.activeTaskId = state.activeTaskId === task.id ? null : task.id;
+        saveState();
+        renderAll();
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'del';
+      delBtn.textContent = '×';
+      delBtn.title = 'Remove task';
+      delBtn.addEventListener('click', function() {
+        state.tasks = state.tasks.filter(function(t) { return t.id !== task.id; });
+        if (state.activeTaskId === task.id) state.activeTaskId = null;
+        saveState();
+        renderAll();
+      });
+
+      li.appendChild(checkBtn);
+      li.appendChild(txtSpan);
+      li.appendChild(pomSpan);
+      li.appendChild(bindBtn);
+      li.appendChild(delBtn);
+      taskListEl.appendChild(li);
+    });
+  }
+
+  /* ============================================================
+     9. HABIT TRACKER & INLINE EDITOR
+     ============================================================ */
+  const habitForm = document.getElementById('habitForm');
+  const habitNameInput = document.getElementById('habitNameInput');
+  const habitCueInput = document.getElementById('habitCueInput');
+  const newHabitDayChips = document.querySelectorAll('#newHabitDayChips .chip');
+  const habitFormHint = document.getElementById('habitFormHint');
+  const habitListEl = document.getElementById('habitList');
+  const habitSummaryLine = document.getElementById('habitSummaryLine');
+
+  function updateHabitFormHint() {
+    const selectedDays = [];
+    newHabitDayChips.forEach(function(chip) {
+      if (chip.classList.contains('on')) {
+        selectedDays.push(parseInt(chip.getAttribute('data-day'), 10));
+      }
+    });
+    const daysLabel = formatDaysSchedule(selectedDays);
+    const timeLabel = formatTime12h(habitCueInput.value || '08:00');
+    habitFormHint.textContent = daysLabel + ' · ' + timeLabel;
+  }
+
+  newHabitDayChips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chip.classList.toggle('on');
+      updateHabitFormHint();
+    });
+  });
+
+  habitCueInput.addEventListener('input', updateHabitFormHint);
+  habitCueInput.addEventListener('change', updateHabitFormHint);
+
+  habitForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = habitNameInput.value.trim();
+    if (!name) return;
+    const cue = habitCueInput.value || '08:00';
+    const selectedDays = [];
+    newHabitDayChips.forEach(function(chip) {
+      if (chip.classList.contains('on')) {
+        selectedDays.push(parseInt(chip.getAttribute('data-day'), 10));
+      }
+    });
+    const days = selectedDays.length > 0 ? selectedDays : [0, 1, 2, 3, 4, 5, 6];
+
+    state.habits.unshift({
+      id: 'h_' + Date.now(),
+      name: name,
+      cue: cue,
+      days: days,
+      checks: {}
+    });
+
+    habitNameInput.value = '';
+    habitCueInput.value = '08:00';
+    newHabitDayChips.forEach(function(c) { c.classList.add('on'); });
+    updateHabitFormHint();
+    saveState();
+    renderAll();
+  });
+
+  function calculateHabitStreak(habit) {
+    let streak = 0;
+    const cur = new Date();
+    for (let i = 0; i < 60; i++) {
+      const dStr = isoDate(cur);
+      const dayIdx = getMonFirstDayIndex(cur);
+      const isScheduled = habit.days.indexOf(dayIdx) !== -1;
+      if (isScheduled) {
+        if (habit.checks && habit.checks[dStr]) {
+          streak += 1;
+        } else if (i > 0) {
+          break;
+        }
+      }
+      cur.setDate(cur.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function calculateHabitWeeklyStats(habit, weekDates) {
+    let scheduled = 0;
+    let completed = 0;
+    weekDates.forEach(function(d, idx) {
+      const dStr = isoDate(d);
+      const isSched = habit.days.indexOf(idx) !== -1;
+      if (isSched) {
+        scheduled += 1;
+        if (habit.checks && habit.checks[dStr]) {
+          completed += 1;
+        }
+      }
+    });
+    const pct = scheduled > 0 ? Math.round((completed / scheduled) * 100) : 0;
+    return { scheduled: scheduled, completed: completed, pct: pct };
+  }
+
+  function renderHabits() {
+    habitListEl.innerHTML = '';
+    const weekDates = getCurrentWeekDates();
+    const todayISO = getTodayISO();
+
+    if (state.habits.length === 0) {
+      const emptyLi = document.createElement('li');
+      emptyLi.className = 'empty';
+      emptyLi.textContent = 'No habits tracked yet. Add your first daily promise above.';
+      habitListEl.appendChild(emptyLi);
+      habitSummaryLine.textContent = '0 of 0 kept today · 0 habits tracked';
+      return;
+    }
+
+    let keptTodayCount = 0;
+    state.habits.forEach(function(habit) {
+      if (habit.checks && habit.checks[todayISO]) {
+        keptTodayCount += 1;
+      }
+
+      const li = document.createElement('li');
+      li.className = 'habit';
+
+      const streak = calculateHabitStreak(habit);
+      const wkStats = calculateHabitWeeklyStats(habit, weekDates);
+
+      const head = document.createElement('div');
+      head.className = 'habit-head';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'habit-name';
+      nameEl.textContent = habit.name;
+
+      const streakEl = document.createElement('span');
+      streakEl.className = 'habit-streak' + (streak >= 1 ? ' hot' : '');
+      streakEl.textContent = '✦ ' + streak + 'd';
+
+      const editBtn = document.createElement('button');
+      editBtn.type = 'button';
+      editBtn.className = 'mini';
+      editBtn.title = 'Edit habit';
+      editBtn.setAttribute('aria-label', 'Edit habit');
+      editBtn.textContent = '✎';
+      editBtn.addEventListener('click', function() {
+        editingHabitId = editingHabitId === habit.id ? null : habit.id;
+        renderHabits();
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'del';
+      delBtn.textContent = '✕';
+      delBtn.title = 'Remove habit';
+      delBtn.setAttribute('aria-label', 'Remove habit');
+      delBtn.addEventListener('click', function() {
+        state.habits = state.habits.filter(function(h) { return h.id !== habit.id; });
+        saveState();
+        renderAll();
+      });
+
+      head.appendChild(nameEl);
+      head.appendChild(streakEl);
+      head.appendChild(editBtn);
+      head.appendChild(delBtn);
+
+      const meta = document.createElement('div');
+      meta.className = 'habit-meta';
+      const timeFormatted = formatTime12h(habit.cue);
+      const scheduleFormatted = formatDaysSchedule(habit.days);
+      meta.innerHTML = 'At <em>' + timeFormatted + '</em> · ' + scheduleFormatted;
+
+      const weekGrid = document.createElement('div');
+      weekGrid.className = 'week';
+
+      weekDates.forEach(function(d, idx) {
+        const dStr = isoDate(d);
+        const isSched = habit.days.indexOf(idx) !== -1;
+        const isChecked = Boolean(habit.checks && habit.checks[dStr]);
+        const isToday = dStr === todayISO;
+
+        const col = document.createElement('div');
+        col.className = 'day-col';
+
+        const lbl = document.createElement('span');
+        lbl.className = 'dlabel';
+        lbl.textContent = DAY_COL_HEADER[idx];
+
+        const cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = 'cell' +
+          (isChecked ? ' on' : '') +
+          (!isSched ? ' unsched' : '') +
+          (isToday ? ' today' : '');
+        cell.title = DAY_FULL[idx] + ' (' + dStr + ')';
+        cell.addEventListener('click', function() {
+          if (!habit.checks) habit.checks = {};
+          const nextVal = !habit.checks[dStr];
+          habit.checks[dStr] = nextVal;
+          saveState();
+          renderAll();
+          if (nextVal) {
+            const newStreak = calculateHabitStreak(habit);
+            if (newStreak >= 2) {
+              showToast('✦ ' + newStreak + '-DAY STREAK — KEEP GOING');
+            } else {
+              showToast('✦ PROMISE KEPT — KEEP GOING');
+            }
+          }
+        });
+
+        col.appendChild(lbl);
+        col.appendChild(cell);
+        weekGrid.appendChild(col);
+      });
+
+      const foot = document.createElement('div');
+      foot.className = 'habit-foot';
+      foot.innerHTML =
+        '<span>' + wkStats.completed + ' / ' + wkStats.scheduled + ' THIS WEEK</span>' +
+        '<div class="bar"><i style="width:' + wkStats.pct + '%"></i></div>';
+
+      li.appendChild(head);
+      li.appendChild(meta);
+      li.appendChild(weekGrid);
+      li.appendChild(foot);
+
+      if (editingHabitId === habit.id) {
+        const editorWrap = document.createElement('div');
+        const grid = document.createElement('div');
+        grid.className = 'edit-grid';
+
+        const lblName = document.createElement('span');
+        lblName.className = 'edit-label';
+        lblName.textContent = 'Habit';
+        const inpName = document.createElement('input');
+        inpName.type = 'text';
+        inpName.className = 'inp';
+        inpName.value = habit.name;
+
+        const lblCue = document.createElement('span');
+        lblCue.className = 'edit-label';
+        lblCue.textContent = 'Hour';
+        const inpCue = document.createElement('input');
+        inpCue.type = 'time';
+        inpCue.className = 'inp time';
+        inpCue.value = /^\d{2}:\d{2}$/.test(habit.cue) ? habit.cue : '08:00';
+
+        const lblDays = document.createElement('span');
+        lblDays.className = 'edit-label';
+        lblDays.textContent = 'Days';
+        const chipBox = document.createElement('div');
+        chipBox.className = 'chips';
+
+        DAY_CHIP.forEach(function(letter, dIdx) {
+          const c = document.createElement('button');
+          c.type = 'button';
+          c.className = 'chip' + (habit.days.indexOf(dIdx) !== -1 ? ' on' : '');
+          c.textContent = letter;
+          c.setAttribute('data-day', String(dIdx));
+          c.addEventListener('click', function() {
+            c.classList.toggle('on');
+          });
+          chipBox.appendChild(c);
+        });
+
+        grid.appendChild(lblName);
+        grid.appendChild(inpName);
+        grid.appendChild(lblCue);
+        grid.appendChild(inpCue);
+        grid.appendChild(lblDays);
+        grid.appendChild(chipBox);
+
+        const actions = document.createElement('div');
+        actions.className = 'edit-actions';
+        const cancelB = document.createElement('button');
+        cancelB.type = 'button';
+        cancelB.className = 'btn sm';
+        cancelB.textContent = 'Cancel';
+        cancelB.addEventListener('click', function() {
+          editingHabitId = null;
+          renderHabits();
+        });
+
+        const saveB = document.createElement('button');
+        saveB.type = 'button';
+        saveB.className = 'btn sm primary';
+        saveB.textContent = 'Save';
+        saveB.addEventListener('click', function() {
+          const newN = inpName.value.trim();
+          if (newN) habit.name = newN;
+          habit.cue = inpCue.value || '08:00';
+          const newDays = [];
+          chipBox.querySelectorAll('.chip.on').forEach(function(ch) {
+            newDays.push(parseInt(ch.getAttribute('data-day'), 10));
+          });
+          if (newDays.length > 0) habit.days = newDays;
+          editingHabitId = null;
+          saveState();
+          renderAll();
+        });
+
+        actions.appendChild(cancelB);
+        actions.appendChild(saveB);
+        editorWrap.appendChild(grid);
+        editorWrap.appendChild(actions);
+        li.appendChild(editorWrap);
+      }
+
+      habitListEl.appendChild(li);
+    });
+
+    const totalTracked = state.habits.length;
+    habitSummaryLine.textContent =
+      keptTodayCount + ' of ' + totalTracked + ' kept today · ' + totalTracked + (totalTracked === 1 ? ' habit tracked' : ' habits tracked');
+  }
+
+  /* ============================================================
+     10. STATS / PROGRESS
+     ============================================================ */
+  const statPomodorosEl = document.getElementById('statPomodoros');
+  const statMinutesEl = document.getElementById('statMinutes');
+  const statTasksDoneEl = document.getElementById('statTasksDone');
+  const statBestStreakEl = document.getElementById('statBestStreak');
+  const todayLogEl = document.getElementById('todayLog');
+
+  const chronTotalPomsEl = document.getElementById('chronTotalPoms');
+  const chronFocusHoursEl = document.getElementById('chronFocusHours');
+  const chronTasksDoneEl = document.getElementById('chronTasksDone');
+  const chronHabitRateEl = document.getElementById('chronHabitRate');
+  const weeklyChartEl = document.getElementById('weeklyChart');
+  const chartFootNoteEl = document.getElementById('chartFootNote');
+  const habitOverviewListEl = document.getElementById('habitOverviewList');
+  const regimenScheduleListEl = document.getElementById('regimenScheduleList');
+
+  function renderStatsAndChronicle() {
+    const today = getTodayISO();
+    const todayRec = state.history[today] || { pomodoros: 0, minutes: 0 };
+    const tasksDoneCount = state.tasks.filter(function(t) { return t.done; }).length;
+    const habitsTodayCount = state.habits.filter(function(h) {
+      return Boolean(h.checks && h.checks[today]);
+    }).length;
+
+    statPomodorosEl.textContent = String(todayRec.pomodoros);
+    statMinutesEl.textContent = String(todayRec.minutes);
+    statTasksDoneEl.textContent = String(tasksDoneCount);
+    statBestStreakEl.textContent = String(habitsTodayCount);
+
+    todayLogEl.innerHTML = '';
+    if (todayRec.pomodoros <= 0) {
+      const emptySpan = document.createElement('span');
+      emptySpan.className = 'log-empty';
+      emptySpan.textContent = 'No sessions completed yet today.';
+      todayLogEl.appendChild(emptySpan);
+    } else {
+      for (let i = 0; i < todayRec.pomodoros; i++) {
+        const pip = document.createElement('span');
+        pip.className = 'pip';
+        pip.title = 'Completed Focus Session #' + (i + 1);
+        pip.textContent = '❦';
+        todayLogEl.appendChild(pip);
+      }
+    }
+
+    chronTotalPomsEl.textContent = String(todayRec.pomodoros);
+    chronFocusHoursEl.textContent = String(todayRec.minutes);
+    chronTasksDoneEl.textContent = String(tasksDoneCount);
+    chronHabitRateEl.textContent = String(habitsTodayCount);
+
+    const weekDates = getCurrentWeekDates();
+    let weekMins = 0;
+    let maxDayMins = 45;
+
+    const dayRecords = weekDates.map(function(d, idx) {
+      const dStr = isoDate(d);
+      const rec = state.history[dStr] || { pomodoros: 0, minutes: 0 };
+      weekMins += rec.minutes;
+      if (rec.minutes > maxDayMins) maxDayMins = rec.minutes;
+      return {
+        label: DAY_COL_HEADER[idx],
+        minutes: rec.minutes,
+        pomodoros: rec.pomodoros,
+        isToday: dStr === today
+      };
+    });
+
+    weeklyChartEl.innerHTML = '';
+    dayRecords.forEach(function(item) {
+      const col = document.createElement('div');
+      col.className = 'col';
+
+      const val = document.createElement('div');
+      val.className = 'val';
+      val.textContent = item.minutes > 0 ? String(item.minutes) : '';
+
+      const track = document.createElement('div');
+      track.className = 'track';
+
+      const bar = document.createElement('div');
+      const heightPct = item.minutes > 0 ? Math.max(12, Math.round((item.minutes / maxDayMins) * 100)) : 3;
+      bar.className = 'bar' + (item.minutes === 0 ? ' zero' : '');
+      bar.style.height = item.minutes > 0 ? heightPct + '%' : '4px';
+
+      const dLabel = document.createElement('div');
+      dLabel.className = 'd-label';
+      dLabel.textContent = item.label;
+
+      track.appendChild(bar);
+      col.appendChild(val);
+      col.appendChild(track);
+      col.appendChild(dLabel);
+      weeklyChartEl.appendChild(col);
+    });
+
+    chartFootNoteEl.textContent = weekMins + ' focused minutes across the last seven days.';
+
+    habitOverviewListEl.innerHTML = '';
+    if (state.habits.length === 0) {
+      habitOverviewListEl.innerHTML = '<div class="empty">No habits recorded yet.</div>';
+    } else {
+      state.habits.forEach(function(h) {
+        const st = calculateHabitWeeklyStats(h, weekDates);
+        const row = document.createElement('div');
+        row.className = 'ov-row';
+        row.innerHTML =
+          '<div class="ov-name"></div>' +
+          '<div class="bar"><i style="width:' + st.pct + '%"></i></div>' +
+          '<div class="ov-num">' + st.completed + '/' + st.scheduled + '</div>';
+        row.querySelector('.ov-name').textContent = h.name;
+        habitOverviewListEl.appendChild(row);
+      });
+    }
+
+    regimenScheduleListEl.innerHTML = '';
+    const todayIdx = getMonFirstDayIndex(new Date());
+    DAY_FULL.forEach(function(dayName, idx) {
+      const count = state.habits.filter(function(h) { return h.days.indexOf(idx) !== -1; }).length;
+      const row = document.createElement('div');
+      row.className = 'reg-row' + (idx === todayIdx ? ' today' : '') + (count === 0 ? ' off' : '');
+      row.innerHTML =
+        '<span class="reg-day">' + dayName + (idx === todayIdx ? ' · Today' : '') + '</span>' +
+        '<span class="reg-val">' + (count > 0 ? count + (count === 1 ? ' Habit' : ' Habits') : 'Rest Day') + '</span>';
+      regimenScheduleListEl.appendChild(row);
+    });
+  }
+
+  function renderAll() {
+    updateTimerUI();
+    renderTasks();
+    renderHabits();
+    renderStatsAndChronicle();
+  }
+
+  /* ============================================================
+     11. INITIALIZE APP
+     ============================================================ */
+  buildDialTicks();
+  updateMastheadDate();
+  applyTheme();
+  applySoundUI();
+  updateHabitFormHint();
+  initMediaSessionHandlers();
+  setMode('focus');
+  renderAll();
+})();
+</script>
+</body>
+</html>
